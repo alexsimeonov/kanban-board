@@ -16,6 +16,12 @@ const createColumn = (name) => {
   return column;
 };
 
+const editColumn = (id, name) => {
+  const columnToEdit = columnsData.find((column) => column.id === id);
+  columnToEdit.name = name;
+  return columnToEdit;
+};
+
 const deleteColumn = (id) => {
   columnsData = columnsData.filter((column) => column.id !== id);
   return columnsData;
@@ -32,9 +38,15 @@ module.exports = (server) => {
     next();
   });
 
-  server.post("/columns", async (req, res, next) => {
-    const newColumn = await createColumn(req.body.name);
+  server.post("/columns", (req, res, next) => {
+    const newColumn = createColumn(req.body.name);
     res.send(newColumn);
+    next();
+  });
+
+  server.put("/columns/:id", (req, res, next) => {
+    const editedColumn = editColumn(req.params.id, req.body.name);
+    res.send(editedColumn);
     next();
   });
 
