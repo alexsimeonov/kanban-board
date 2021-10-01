@@ -1,7 +1,8 @@
 const errors = require("restify-errors");
 const uuid = require("uuid");
 
-let columnsData = [
+const badRequestErrorMessage = "Invalid column id.";
+const columnsData = [
   { id: uuid.v4(), name: "To Do" },
   { id: uuid.v4(), name: "In Progress" },
   { id: uuid.v4(), name: "Done" },
@@ -58,7 +59,7 @@ module.exports = (server) => {
       res.send(editedColumn);
       next();
     } else {
-      return next(new errors.BadRequestError("Invalid column id."));
+      return next(new errors.BadRequestError(badRequestErrorMessage));
     }
   });
 
@@ -69,7 +70,7 @@ module.exports = (server) => {
       res.send(updatedColumnsData);
       next();
     } else {
-      return next(new errors.BadRequestError("Invalid column id."));
+      return next(new errors.BadRequestError(badRequestErrorMessage));
     }
   });
 };
