@@ -1,3 +1,4 @@
+const errors = require("restify-errors");
 const uuid = require("uuid");
 
 let columnsData = [
@@ -18,12 +19,23 @@ const createColumn = (name) => {
 
 const editColumn = (id, name) => {
   const columnToEdit = columnsData.find((column) => column.id === id);
-  columnToEdit.name = name;
+
+  if (columnToEdit) {
+    columnToEdit.name = name;
+  }
+
   return columnToEdit;
 };
 
 const deleteColumn = (id) => {
-  columnsData = columnsData.filter((column) => column.id !== id);
+  const columnToDelete = columnsData.find((column) => column.id === id);
+
+  if (!columnToDelete) {
+    return null;
+  }
+
+  columnsData.splice(columnsData.indexOf(columnToDelete), 1);
+
   return columnsData;
 };
 
@@ -46,13 +58,23 @@ module.exports = (server) => {
 
   server.put("/columns/:id", (req, res, next) => {
     const editedColumn = editColumn(req.params.id, req.body.name);
-    res.send(editedColumn);
-    next();
+
+    if (editedColumn) {
+      res.send(editedColumn);
+      next();
+    } else {
+      return next(new errors.BadRequestError("Invalid column id."));
+    }
   });
 
   server.del("/columns/:id", (req, res, next) => {
     const updatedColumnsData = deleteColumn(req.params.id);
-    res.send(updatedColumnsData);
-    next();
+
+    if (updatedColumnsData) {
+      res.send(updatedColumnsData);
+      next();
+    } else {
+      return next(new errors.BadRequestError("Invalid column id."));
+    }
   });
 };
