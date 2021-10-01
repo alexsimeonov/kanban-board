@@ -45,11 +45,6 @@ module.exports = (server) => {
     next();
   });
 
-  server.get("/columns/:id", (req, res, next) => {
-    res.send(columnsData.find((column) => column.id === req.params.id));
-    next();
-  });
-
   server.post("/columns", (req, res, next) => {
     const newColumn = createColumn(req.body.name);
     res.send(newColumn);
