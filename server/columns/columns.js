@@ -8,6 +8,10 @@ const columnsData = [
   { id: uuid.v4(), name: "Done" },
 ];
 
+const getColumns = () => columnsData;
+
+const getColumnById = (id) => columnsData.find((column) => column.id === id);
+
 const createColumn = (name) => {
   const column = {
     id: uuid.v4(),
@@ -19,7 +23,7 @@ const createColumn = (name) => {
 };
 
 const editColumn = (id, name) => {
-  const columnToEdit = columnsData.find((column) => column.id === id);
+  const columnToEdit = getColumnById(id);
 
   if (columnToEdit) {
     columnToEdit.name = name;
@@ -29,7 +33,7 @@ const editColumn = (id, name) => {
 };
 
 const deleteColumn = (id) => {
-  const columnToDelete = columnsData.find((column) => column.id === id);
+  const columnToDelete = getColumnById(id);
 
   if (!columnToDelete) {
     return null;
@@ -42,7 +46,7 @@ const deleteColumn = (id) => {
 
 module.exports = (server) => {
   server.get("/columns", (req, res, next) => {
-    res.send(columnsData);
+    res.send(getColumns());
     next();
   });
 
@@ -58,9 +62,9 @@ module.exports = (server) => {
     if (editedColumn) {
       res.send(editedColumn);
       next();
-    } else {
-      return next(new errors.BadRequestError(badRequestErrorMessage));
     }
+
+    return next(new errors.BadRequestError(badRequestErrorMessage));
   });
 
   server.del("/columns/:id", (req, res, next) => {
@@ -69,8 +73,8 @@ module.exports = (server) => {
     if (updatedColumnsData) {
       res.send(updatedColumnsData);
       next();
-    } else {
-      return next(new errors.BadRequestError(badRequestErrorMessage));
     }
+
+    return next(new errors.BadRequestError(badRequestErrorMessage));
   });
 };

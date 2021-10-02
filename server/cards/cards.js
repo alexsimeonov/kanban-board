@@ -4,9 +4,8 @@ const uuid = require("uuid");
 const badRequestErrorMessage = "Invalid card id.";
 const cardsData = [];
 
-const getCardById = (id) => {
-  return cardsData.find((card) => card.id === id);
-};
+const getCards = () => cardsData;
+const getCardById = (id) => cardsData.find((card) => card.id === id);
 
 const createCard = (cardData) => {
   const card = { id: uuid.v4(), ...cardData, history: [] };
@@ -40,8 +39,10 @@ const undoCardChanges = (id) => {
     return null;
   }
 
-  card = Object.assign(card, card.history[card.history.length - 1]);
-  card.history.pop();
+  if (card.history) {
+    card = Object.assign(card, card.history.pop());
+  }
+
   return card;
 };
 
@@ -59,7 +60,7 @@ const deleteCard = (id) => {
 
 module.exports = (server) => {
   server.get("/cards", (req, res, next) => {
-    res.send(cardsData);
+    res.send(getCards());
     next();
   });
 
@@ -85,7 +86,7 @@ module.exports = (server) => {
     if (req.getQuery()) {
       undoCardChanges(req.params.id);
       res.send(getCardById(req.params.id));
-      return next();
+      next();
     }
 
     const editedCard = editCard(req.params.id, req.body);
