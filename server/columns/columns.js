@@ -1,11 +1,11 @@
-const errors = require("restify-errors");
-const uuid = require("uuid");
+const errors = require('restify-errors');
+const uuid = require('uuid');
 
-const badRequestErrorMessage = "Invalid column id.";
+const badRequestErrorMessage = 'Invalid column id.';
 const columnsData = [
-  { id: uuid.v4(), name: "To Do" },
-  { id: uuid.v4(), name: "In Progress" },
-  { id: uuid.v4(), name: "Done" },
+  { id: uuid.v4(), name: 'To Do' },
+  { id: uuid.v4(), name: 'In Progress' },
+  { id: uuid.v4(), name: 'Done' },
 ];
 
 const getColumns = () => columnsData;
@@ -45,34 +45,34 @@ const deleteColumn = (id) => {
 };
 
 module.exports = (server) => {
-  server.get("/columns", (req, res, next) => {
+  server.get('/columns', (req, res, next) => {
     res.send(getColumns());
-    next();
+    return next();
   });
 
-  server.post("/columns", (req, res, next) => {
+  server.post('/columns', (req, res, next) => {
     const newColumn = createColumn(req.body.name);
     res.send(newColumn);
-    next();
+    return next();
   });
 
-  server.put("/columns/:id", (req, res, next) => {
+  server.put('/columns/:id', (req, res, next) => {
     const editedColumn = editColumn(req.params.id, req.body.name);
 
     if (editedColumn) {
       res.send(editedColumn);
-      next();
+      return next();
     }
 
     return next(new errors.BadRequestError(badRequestErrorMessage));
   });
 
-  server.del("/columns/:id", (req, res, next) => {
+  server.del('/columns/:id', (req, res, next) => {
     const updatedColumnsData = deleteColumn(req.params.id);
 
     if (updatedColumnsData) {
       res.send(updatedColumnsData);
-      next();
+      return next();
     }
 
     return next(new errors.BadRequestError(badRequestErrorMessage));
