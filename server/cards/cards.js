@@ -1,7 +1,7 @@
-const errors = require("restify-errors");
-const uuid = require("uuid");
+const errors = require('restify-errors');
+const uuid = require('uuid');
 
-const badRequestErrorMessage = "Invalid card id.";
+const badRequestErrorMessage = 'Invalid card id.';
 const cardsData = [];
 
 const getCards = () => cardsData;
@@ -14,7 +14,7 @@ const createCard = (cardData) => {
 };
 
 const editCard = (id, cardData) => {
-  let card = getCardById(id);
+  const card = getCardById(id);
 
   if (!card) {
     return null;
@@ -39,7 +39,7 @@ const undoCardChanges = (id) => {
     return null;
   }
 
-  if (card.history) {
+  if (!card.history.isEmpty) {
     card = Object.assign(card, card.history.pop());
   }
 
@@ -59,52 +59,52 @@ const deleteCard = (id) => {
 };
 
 module.exports = (server) => {
-  server.get("/cards", (req, res, next) => {
+  server.get('/cards', (req, res, next) => {
     res.send(getCards());
-    next();
+    return next();
   });
 
-  server.get("/cards/:id", (req, res, next) => {
+  server.get('/cards/:id', (req, res, next) => {
     const card = getCardById(req.params.id);
 
     if (card) {
       res.send(card);
-      next();
+      return next();
     }
 
     return next(new errors.BadRequestError(badRequestErrorMessage));
   });
 
-  server.post("/cards", (req, res, next) => {
+  server.post('/cards', (req, res, next) => {
     const card = createCard(req.body);
 
     res.send(card);
-    next();
+    return next();
   });
 
-  server.put("/cards/:id", (req, res, next) => {
+  server.put('/cards/:id', (req, res, next) => {
     if (req.getQuery()) {
       undoCardChanges(req.params.id);
       res.send(getCardById(req.params.id));
-      next();
+      return next();
     }
 
     const editedCard = editCard(req.params.id, req.body);
 
     if (editedCard) {
       res.send(editedCard);
-      next();
+      return next();
     }
 
     return next(new errors.BadRequestError(badRequestErrorMessage));
   });
 
-  server.del("/cards/:id", (req, res, next) => {
+  server.del('/cards/:id', (req, res, next) => {
     const updatedCardsData = deleteCard(req.params.id);
 
     if (updatedCardsData) {
       res.send(updatedCardsData);
-      next();
+      return next();
     }
 
     return next(new errors.BadRequestError(badRequestErrorMessage));
