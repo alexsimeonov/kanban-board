@@ -1,11 +1,12 @@
 import React from 'react';
-import './App.css';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import HomePage from './pages/home';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Kanban Board</h1>
-    </div>
+    <Router>
+      <Route exact path="/columns" component={HomePage} />
+    </Router>
   );
 }
 
