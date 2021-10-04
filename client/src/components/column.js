@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { MdMoreHoriz } from 'react-icons/md';
+import PropTypes from 'prop-types';
 
 const Container = styled.div`
   display: flex;
@@ -45,10 +46,10 @@ const CardsContainer = styled.div`
   margin-bottom: 15px;
 `;
 
-const Column = () => (
+const Column = ({ title }) => (
   <Container>
     <ColumnHeaderContainer>
-      <Title>To Do</Title>
+      <Title>{title}</Title>
       <MoreButton>
         <MoreIcon />
       </MoreButton>
@@ -56,5 +57,9 @@ const Column = () => (
     <CardsContainer />
   </Container>
 );
+
+Column.propTypes = {
+  title: PropTypes.string.isRequired,
+};
 
 export default Column;
