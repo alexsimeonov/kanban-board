@@ -45,18 +45,16 @@ const CardsContainer = styled.div`
   margin-bottom: 15px;
 `;
 
-function Column() {
-  return (
-    <Container>
-      <ColumnHeaderContainer>
-        <Title>To Do</Title>
-        <MoreButton>
-          <MoreIcon />
-        </MoreButton>
-      </ColumnHeaderContainer>
-      <CardsContainer />
-    </Container>
-  );
-}
+const Column = () => (
+  <Container>
+    <ColumnHeaderContainer>
+      <Title>To Do</Title>
+      <MoreButton>
+        <MoreIcon />
+      </MoreButton>
+    </ColumnHeaderContainer>
+    <CardsContainer />
+  </Container>
+);
 
 export default Column;

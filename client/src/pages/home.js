@@ -18,17 +18,15 @@ const ColumnsContainer = styled.div`
   margin: 20px;
 `;
 
-function HomePage() {
-  return (
-    <div>
-      <Header />
-      <Home>
-        <ColumnsContainer>
-          <Column />
-        </ColumnsContainer>
-      </Home>
-    </div>
-  );
-}
+const HomePage = () => (
+  <div>
+    <Header />
+    <Home>
+      <ColumnsContainer>
+        <Column />
+      </ColumnsContainer>
+    </Home>
+  </div>
+);
 
 export default HomePage;

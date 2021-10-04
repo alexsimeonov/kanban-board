@@ -10,12 +10,10 @@ const Container = styled.div`
   color: #F7F3E3;
 `;
 
-function Header() {
-  return (
-    <Container>
-      <h1>Kanban Board</h1>
-    </Container>
-  );
-}
+const Header = () => (
+  <Container>
+    <h1>Kanban Board</h1>
+  </Container>
+);
 
 export default Header;
