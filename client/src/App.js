@@ -4,7 +4,7 @@ import HomePage from './pages/home';
 
 const App = () => (
   <Router>
-    <Route exact path="/columns" component={HomePage} />
+    <Route exact path="/" component={HomePage} />
   </Router>
 );
 
