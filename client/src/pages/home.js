@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Header from '../components/header';
+import Column from '../components/column';
 
 const Home = styled.div`
   background-color: #F7F3E3;
@@ -22,7 +23,9 @@ function HomePage() {
     <div>
       <Header />
       <Home>
-        <ColumnsContainer />
+        <ColumnsContainer>
+          <Column />
+        </ColumnsContainer>
       </Home>
     </div>
   );
