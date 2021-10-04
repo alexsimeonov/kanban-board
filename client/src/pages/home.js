@@ -14,7 +14,8 @@ const ColumnsContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   width: 95%;
-  background-color: #0EB1D2;
+  border: 1px solid #0EB1D2;
+  background-color: transparent;
   margin: 20px;
 `;
 
