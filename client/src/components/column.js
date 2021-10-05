@@ -15,10 +15,11 @@ const Container = styled.div`
   border: 1px solid #0EB1D2;
 `;
 
-const Title = styled.h2`
+const Title = styled.input`
   color: #0EB1D2;
+  background-color: transparent;
+  border: none;
   align-self: flex-start;
-  margin-left: 10px;
 `;
 
 const MoreButton = styled.button`
@@ -29,8 +30,8 @@ const MoreButton = styled.button`
 
 const MoreIcon = styled(MdMoreHoriz)`
   color: #0EB1D2;
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
 `;
 
 const ColumnHeaderContainer = styled.div`
@@ -49,7 +50,7 @@ const CardsContainer = styled.div`
 const Column = ({ title }) => (
   <Container>
     <ColumnHeaderContainer>
-      <Title>{title}</Title>
+      <Title type="text" value={title} />
       <MoreButton>
         <MoreIcon />
       </MoreButton>
