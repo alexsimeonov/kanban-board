@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { MdMoreHoriz } from 'react-icons/md';
+import { MdDelete } from 'react-icons/md';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { actionCreators } from '../state/index';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 300px;
+  min-width: 300px;
   height: 700px;
-  margin: 15px;
+  margin: 20px;
   background-color: transparent;
   border: 1px solid #0EB1D2;
 `;
@@ -22,13 +24,13 @@ const Title = styled.input`
   align-self: flex-start;
 `;
 
-const MoreButton = styled.button`
+const DeleteButton = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
 `;
 
-const MoreIcon = styled(MdMoreHoriz)`
+const DeleteIcon = styled(MdDelete)`
   color: #0EB1D2;
   width: 20px;
   height: 20px;
@@ -47,20 +49,48 @@ const CardsContainer = styled.div`
   margin-bottom: 15px;
 `;
 
-const Column = ({ title }) => (
-  <Container>
-    <ColumnHeaderContainer>
-      <Title type="text" value={title} />
-      <MoreButton>
-        <MoreIcon />
-      </MoreButton>
-    </ColumnHeaderContainer>
-    <CardsContainer />
-  </Container>
-);
+const Column = ({
+  // eslint-disable-next-line react/prop-types
+  name, id, editColumn, deleteColumn,
+}) => {
+  const [newColumnName, setNewColumnName] = useState(name);
 
-Column.propTypes = {
-  title: PropTypes.string.isRequired,
+  const changeNameHandler = (value) => {
+    setNewColumnName(value);
+  };
+
+  const editColumnHandler = () => {
+    editColumn(id, newColumnName);
+  };
+
+  const deleteColumnHandler = () => {
+    deleteColumn(id);
+  };
+
+  return (
+    <Container>
+      <ColumnHeaderContainer>
+        <Title type="text" value={newColumnName} onChange={(event) => changeNameHandler(event.target.value)} onBlur={editColumnHandler} />
+        <DeleteButton onClick={deleteColumnHandler}>
+          <DeleteIcon />
+        </DeleteButton>
+      </ColumnHeaderContainer>
+      <CardsContainer />
+    </Container>
+  );
 };
 
-export default Column;
+Column.propTypes = {
+  name: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+};
+
+const mapStateToProps = () => ({});
+
+const mapDispatchToProps = (dispatch) => ({
+  editColumn: (id, name) => dispatch(actionCreators.editColumn(id, name)),
+  deleteColumn: (id) => dispatch(actionCreators.deleteColumn(id)),
+}
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Column);

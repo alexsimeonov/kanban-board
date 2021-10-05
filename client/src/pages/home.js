@@ -1,26 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
-import axios from 'axios';
+
 import Header from '../components/header';
 import Column from '../components/column';
+import { actionCreators } from '../state/index';
 
 const Home = styled.div`
   background-color: #F7F3E3;
   display: flex;
   justify-content: center;
   flex-direction: column;
+  height: calc(100vh - 70px);
 `;
 
 const ColumnsContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   width: 95%;
+  min-height: 760px;
   border: 1px solid #0EB1D2;
   background-color: transparent;
   margin: 20px;
+  overflow: scroll;
 `;
 
-const CreateColumnContainer = styled.div`
+const CreateColumnContainer = styled.div` 
   display: flex;
   justify-content: center;
   margin: 10px;
@@ -38,28 +43,24 @@ const CreateColumnButton = styled.button`
   background-color: transparent;
   width: 100px;
   height: 20px;
+  cursor: pointer;
 `;
 
-const HomePage = React.memo(() => {
-  const [columns, setColumns] = useState([]);
-  let columnNameInput = '';
-
-  const getColumns = () => axios.get('http://localhost:3000/columns').then((res) => {
-    setColumns(res.data);
-  }).catch((err) => console.log(err));
-
-  const addColumn = (name) => axios.post('http://localhost:3000/columns', {
-    name,
-  }).then(() => {
-    columnNameInput = '';
-  }).catch((err) => console.log(err));
+// eslint-disable-next-line react/prop-types
+const HomePage = React.memo(({ columns, getColumns, addColumn }) => {
+  const [columnNameInput, setColumnNameInput] = useState('');
 
   useEffect(() => {
     getColumns();
   }, []);
 
-  const changeColumnNameInput = (event) => {
-    columnNameInput = event.target.value;
+  const enterColumnNameInput = (event) => {
+    setColumnNameInput(event.target.value);
+  };
+
+  const addNewColumnHandler = (name) => {
+    addColumn(name);
+    setColumnNameInput('');
   };
 
   return (
@@ -67,16 +68,15 @@ const HomePage = React.memo(() => {
       <Header />
       <Home>
         <CreateColumnContainer>
-          <ColumnNameInput type="text" placeholder="Enter Column Name..." onChange={changeColumnNameInput} />
-          <CreateColumnButton onClick={() => addColumn(columnNameInput)}>
+          <ColumnNameInput type="text" placeholder="Enter Column Name..." onChange={enterColumnNameInput} value={columnNameInput} />
+          <CreateColumnButton onClick={() => addNewColumnHandler(columnNameInput)}>
             Add Column
           </CreateColumnButton>
         </CreateColumnContainer>
         <ColumnsContainer>
           {
-            columns.map((column) => (
-              <Column key={column.id} title={column.name} />
-            ))
+            // eslint-disable-next-line react/prop-types
+            columns.map((column) => (<Column key={column.id} name={column.name} id={column.id} />))
           }
         </ColumnsContainer>
       </Home>
@@ -84,4 +84,12 @@ const HomePage = React.memo(() => {
   );
 });
 
-export default HomePage;
+const mapStateToProps = (state) => ({ columns: state.columns });
+
+const mapDispatchToProps = (dispatch) => ({
+  getColumns: () => dispatch(actionCreators.getColumns()),
+  addColumn: (name) => dispatch(actionCreators.addColumn(name)),
+}
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
