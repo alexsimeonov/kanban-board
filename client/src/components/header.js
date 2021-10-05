@@ -3,19 +3,31 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   height: 70px;
   background-color: #0EB1D2;
   color: #F7F3E3;
 `;
 
-function Header() {
-  return (
-    <Container>
-      <h1>Kanban Board</h1>
-    </Container>
-  );
-}
+const CardsFilter = styled.input`
+  background-color: transparent;
+  border: none;
+  
+  ::placeholder {
+    color: #F7F3E3;
+  }
+`;
+
+const Logo = styled.h2`
+  margin: 35px;
+`;
+
+const Header = () => (
+  <Container>
+    <Logo>Kanban Board</Logo>
+    <CardsFilter type="text" placeholder="Filter cards..." />
+  </Container>
+);
 
 export default Header;
