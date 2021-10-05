@@ -13,6 +13,8 @@ const Container = styled.div`
 const CardsFilter = styled.input`
   background-color: transparent;
   border: none;
+  margin-right: 20px;
+  width: 300px;
   
   ::placeholder {
     color: #F7F3E3;
@@ -26,7 +28,7 @@ const Logo = styled.h2`
 const Header = () => (
   <Container>
     <Logo>Kanban Board</Logo>
-    <CardsFilter type="text" placeholder="Filter cards..." />
+    <CardsFilter type="text" placeholder="Filter cards by title..." />
   </Container>
 );
 

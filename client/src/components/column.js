@@ -1,9 +1,13 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable max-len */
+/* eslint-disable arrow-body-style */
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MdDelete } from 'react-icons/md';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { actionCreators } from '../state/index';
+import Card from './card';
 
 const Container = styled.div`
   display: flex;
@@ -45,13 +49,18 @@ const ColumnHeaderContainer = styled.div`
 const CardsContainer = styled.div`
   width: 90%;
   height: 90%;
-  background-color: #0EB1D2;
+  background-color: transparent;
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-y: scroll;
 `;
 
 const Column = ({
-  // eslint-disable-next-line react/prop-types
-  name, id, editColumn, deleteColumn,
+  // eslint-disable-next-line no-unused-vars
+  name, id, editColumn, deleteColumn, cards,
 }) => {
   const [newColumnName, setNewColumnName] = useState(name);
 
@@ -75,7 +84,15 @@ const Column = ({
           <DeleteIcon />
         </DeleteButton>
       </ColumnHeaderContainer>
-      <CardsContainer />
+      <CardsContainer>
+        {/* {
+          // eslint-disable-next-line react/prop-types
+          cards.map((card) => {
+            return (<Card title={card.title} description={card.description} status={card.status} />);
+          })
+        } */}
+        <Card title="Test" description="Some description." status="Done" />
+      </CardsContainer>
     </Container>
   );
 };
