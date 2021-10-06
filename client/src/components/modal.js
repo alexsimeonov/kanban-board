@@ -114,12 +114,19 @@ const Modal = ({
     setStatusValue(event.target.selectedOptions[0].value);
   };
 
+  const closeModalHandler = () => {
+    hideModalHandler();
+    setTitleValue('');
+    setDescriptionValue('');
+    setStatusValue('');
+  };
+
   return show ? (
     <ModalContainer>
       <ModalBody>
         <Row>
           <ModalTitle>Create Card</ModalTitle>
-          <CloseButton onClick={hideModalHandler}>
+          <CloseButton onClick={closeModalHandler}>
             <CloseIcon />
           </CloseButton>
         </Row>
