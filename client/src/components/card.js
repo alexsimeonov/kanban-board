@@ -148,7 +148,7 @@ Card.propTypes = {
   deleteCard: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({ columns: state.columns, cards: state.cards });
+const mapStateToProps = (state) => ({ columns: state.columns, cards: state.cardsData.cards });
 const mapDispatchToProps = (dispatch) => ({
   editCard: (
     id,

@@ -8,6 +8,7 @@ const ActionTypes = {
   ADD_CARD: 'ADD_CARDS',
   EDIT_CARD: 'EDIT_CARD',
   DELETE_CARD: 'DELETE_CARD',
+  FILTER_CARDS: 'FILTER_CARDS',
 };
 
 export default ActionTypes;

@@ -111,3 +111,8 @@ export const deleteCard = (id) => (dispatch) => {
     })
     .catch((err) => console.log(err));
 };
+
+export const filterCards = (value) => (dispatch) => dispatch({
+  type: ActionTypes.FILTER_CARDS,
+  payload: value,
+});

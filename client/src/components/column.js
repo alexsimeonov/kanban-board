@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable arrow-body-style */
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MdDelete } from 'react-icons/md';
@@ -58,7 +56,7 @@ const CardsContainer = styled.div`
 `;
 
 const Column = ({
-  name, id, editColumn, deleteColumn, cards,
+  name, id, editColumn, deleteColumn, cards, filterValue,
 }) => {
   const [newColumnName, setNewColumnName] = useState(name);
 
@@ -76,6 +74,17 @@ const Column = ({
     deleteColumn(id);
   };
 
+  const filterCards = (cardsArr) => {
+    let filteredCardsByTitle = cardsArr;
+
+    if (filterValue) {
+      filteredCardsByTitle = cardsArr.filter((card) => card.title
+        .toLowerCase().includes(filterValue.toLowerCase()));
+    }
+
+    return filteredCardsByTitle.filter((card) => card.status === name);
+  };
+
   return (
     <Container>
       <ColumnHeaderContainer>
@@ -86,7 +95,16 @@ const Column = ({
       </ColumnHeaderContainer>
       <CardsContainer>
         {
-          cards.filter((card) => card.status === name).map((card) => <Card title={card.title} description={card.description} status={card.status} key={card.id} id={card.id} />)
+          filterCards(cards)
+            .map((card) => (
+              <Card
+                title={card.title}
+                description={card.description}
+                status={card.status}
+                key={card.id}
+                id={card.id}
+              />
+            ))
         }
       </CardsContainer>
     </Container>
@@ -99,9 +117,13 @@ Column.propTypes = {
   editColumn: PropTypes.func.isRequired,
   deleteColumn: PropTypes.func.isRequired,
   cards: PropTypes.arrayOf(PropTypes.object).isRequired,
+  filterValue: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state) => ({ cards: state.cards });
+const mapStateToProps = (state) => ({
+  cards: state.cardsData.cards,
+  filterValue: state.cardsData.filterValue,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   editColumn: (id, name) => dispatch(actionCreators.editColumn(id, name)),

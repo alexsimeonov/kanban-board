@@ -4,7 +4,7 @@ import cardsReducer from './cards-reducer';
 
 const reducers = combineReducers({
   columns: columnsReducer,
-  cards: cardsReducer,
+  cardsData: cardsReducer,
 });
 
 export default reducers;
