@@ -6,21 +6,23 @@ import { actionCreators } from '../state/index';
 
 const Container = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   height: 70px;
-  background-color: #0EB1D2;
-  color: #F7F3E3;
+  background-color: #565254;
+  color: white;
 `;
 
 const CardsFilterInput = styled.input`
   background-color: transparent;
-  border: none;
+  border: 1px solid white;
+  border-radius: 5px;
   margin-right: 20px;
   width: 300px;
+  height: 30px;
   
   ::placeholder {
-    color: #F7F3E3;
+    color: white;
   }
 `;
 

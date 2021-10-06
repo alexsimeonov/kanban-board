@@ -6,10 +6,11 @@ import PropTypes from 'prop-types';
 import { actionCreators } from '../state/index';
 
 const CardContainer = styled.div`
-width: 90%;
-height: 150px;
-background-color: transparent;
-border: 1px solid #0EB1D2;
+width: 97%;
+height: 170px;
+background-color: white;
+border: 1px solid #565254;
+border-radius: 5px;
 margin-top: 10px;
 display: flex;
 flex-direction: column;
@@ -19,54 +20,66 @@ align-items: center;
 const Row = styled.div`
 margin: 5px;
 display: flex;
-justify-content: space-between;
+justify-content: space-evenly;
 align-items: center;
 `;
 
 const Title = styled.input`
 background-color: transparent;
-width: 50%;
+width: 80%;
 height: 15px;
-border: 1px solid #0EB1D2;
+border: none;
 `;
 
 const Description = styled.textarea`
 background-color: transparent;
-width: 95%;
+width: 88%;
 height: 40px;
 resize: none;
-border-color: #0EB1D2;
+margin-bottom: 10px;
 `;
 
 const Status = styled.select`
 width: 50%;
 cursor: pointer;
 min-width: 100px;
-border-color: #0EB1D2;
+border: none;
 background-color: transparent;
 `;
 
 const UndoIcon = styled(MdUndo)`
 width: 20px;
 height: 20px;
-color: #0EB1D2;
+color: #565254;
 `;
 
 const DeleteIcon = styled(MdDelete)`
 width: 20px;
 height: 20px;
-color: #0EB1D2;
+color: #565254;
 `;
 
 const ActionButton = styled.button`
 background-color: transparent;
-width: 30px;
-height: 30px;
+width: 25px;
+height: 25px;
 display: flex;
 align-items: center;
 justify-content: center;
 cursor: pointer;
-border: 1px solid #0EB1D2;
+border: none;
+`;
+
+const SaveChangesButton = styled.button`
+  width: 50%;
+  height: 30px;
+  border: 1px solid #565254;
+  border-radius: 5px;
+  background-color: transparent;
+  color: #565254;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
 `;
 
 const Card = ({
@@ -106,7 +119,12 @@ const Card = ({
   return (
     <CardContainer>
       <Row>
-        <Title type="text" placeholder="Enter Card Title..." value={newCardTitle} onChange={(event) => setNewCardTitle(event.target.value)} onBlur={editCardHandler} />
+        <Title
+          type="text"
+          placeholder="Enter Card Title..."
+          value={newCardTitle}
+          onChange={(event) => setNewCardTitle(event.target.value)}
+        />
         <ActionButton onClick={undoCardHandler}>
           <UndoIcon />
         </ActionButton>
@@ -114,25 +132,25 @@ const Card = ({
           <DeleteIcon />
         </ActionButton>
       </Row>
-      <Row>
-        <Description
-          value={newCardDescription}
-          onChange={(event) => setNewCardDescription(event.target.value)}
-          onBlur={editCardHandler}
-        />
-      </Row>
+      <Description
+        value={newCardDescription}
+        placeholder="Enter Card Description..."
+        onChange={(event) => setNewCardDescription(event.target.value)}
+      />
       <Row>
         <Status
           value={newCardStatus}
           selectedOptions={[newCardStatus]}
           onChange={(event) => changeCardStatusHandler(event)}
-          onBlur={editCardHandler}
         >
           {
             columns.map((col) => (<option key={col.id}>{col.name}</option>))
           }
         </Status>
       </Row>
+      <SaveChangesButton onClick={editCardHandler}>
+        Save Changes
+      </SaveChangesButton>
     </CardContainer>
   );
 };

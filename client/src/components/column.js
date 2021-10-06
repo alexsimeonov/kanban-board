@@ -13,13 +13,14 @@ const Container = styled.div`
   align-items: center;
   min-width: 300px;
   height: 700px;
-  margin: 20px;
-  background-color: transparent;
-  border: 1px solid #0EB1D2;
+  margin-right: 20px;
+  background-color: #D0CFCF;
+  border: 1px solid #565254;
+  border-radius: 5px;
 `;
 
 const Title = styled.input`
-  color: #0EB1D2;
+  color: #565254;
   background-color: transparent;
   border: none;
   align-self: flex-start;
@@ -32,7 +33,7 @@ const DeleteButton = styled.button`
 `;
 
 const DeleteIcon = styled(MdDelete)`
-  color: #0EB1D2;
+  color: #565254;
   width: 20px;
   height: 20px;
 `;
