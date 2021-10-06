@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable max-len */
 /* eslint-disable arrow-body-style */
 import React, { useState } from 'react';
@@ -59,13 +58,14 @@ const CardsContainer = styled.div`
 `;
 
 const Column = ({
-  // eslint-disable-next-line no-unused-vars
   name, id, editColumn, deleteColumn, cards,
 }) => {
   const [newColumnName, setNewColumnName] = useState(name);
 
   const changeNameHandler = (value) => {
-    setNewColumnName(value);
+    if (value !== newColumnName) {
+      setNewColumnName(value);
+    }
   };
 
   const editColumnHandler = () => {
@@ -85,13 +85,9 @@ const Column = ({
         </DeleteButton>
       </ColumnHeaderContainer>
       <CardsContainer>
-        {/* {
-          // eslint-disable-next-line react/prop-types
-          cards.map((card) => {
-            return (<Card title={card.title} description={card.description} status={card.status} />);
-          })
-        } */}
-        <Card title="Test" description="Some description." status="Done" />
+        {
+          cards.filter((card) => card.status === name).map((card) => <Card title={card.title} description={card.description} status={card.status} key={card.id} id={card.id} />)
+        }
       </CardsContainer>
     </Container>
   );
@@ -100,9 +96,12 @@ const Column = ({
 Column.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
+  editColumn: PropTypes.func.isRequired,
+  deleteColumn: PropTypes.func.isRequired,
+  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state) => ({ cards: state.cards });
 
 const mapDispatchToProps = (dispatch) => ({
   editColumn: (id, name) => dispatch(actionCreators.editColumn(id, name)),

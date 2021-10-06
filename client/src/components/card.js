@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { MdUndo, MdDelete } from 'react-icons/md';
 import PropTypes from 'prop-types';
+import { actionCreators } from '../state/index';
 
 const CardContainer = styled.div`
 width: 90%;
@@ -67,30 +69,95 @@ cursor: pointer;
 border: 1px solid #0EB1D2;
 `;
 
-const Card = ({ title, description, status }) => (
-  <CardContainer>
-    <Row>
-      <Title placeholder="Card Title" value={title} onChange={() => {}} />
-      <ActionButton>
-        <UndoIcon />
-      </ActionButton>
-      <ActionButton>
-        <DeleteIcon />
-      </ActionButton>
-    </Row>
-    <Row>
-      <Description value={description} onChange={() => {}} />
-    </Row>
-    <Row>
-      <Status value={status} onChange={() => {}} />
-    </Row>
-  </CardContainer>
-);
+const Card = ({
+  title,
+  description,
+  status,
+  columns,
+  cards,
+  id,
+  editCard,
+  deleteCard,
+}) => {
+  const [newCardTitle, setNewCardTitle] = useState(title);
+  const [newCardDescription, setNewCardDescription] = useState(description);
+  const [newCardStatus, setNewCardStatus] = useState(status);
+
+  const deleteCardHandler = () => {
+    deleteCard(id);
+  };
+
+  const editCardHandler = () => {
+    editCard(id, newCardTitle, newCardDescription, newCardStatus);
+  };
+
+  const undoCardHandler = () => {
+    editCard(id, newCardTitle, newCardDescription, newCardStatus, '?undo=true');
+    const editedCard = cards.find((card) => card.id === id);
+    setNewCardTitle(editedCard.title);
+    setNewCardDescription(editedCard.description);
+    setNewCardStatus(editedCard.status);
+  };
+
+  const changeCardStatusHandler = (action) => {
+    setNewCardStatus(action.target.selectedOptions[0].value);
+  };
+
+  return (
+    <CardContainer>
+      <Row>
+        <Title type="text" placeholder="Enter Card Title..." value={newCardTitle} onChange={(event) => setNewCardTitle(event.target.value)} onBlur={editCardHandler} />
+        <ActionButton onClick={undoCardHandler}>
+          <UndoIcon />
+        </ActionButton>
+        <ActionButton onClick={deleteCardHandler}>
+          <DeleteIcon />
+        </ActionButton>
+      </Row>
+      <Row>
+        <Description
+          value={newCardDescription}
+          onChange={(event) => setNewCardDescription(event.target.value)}
+          onBlur={editCardHandler}
+        />
+      </Row>
+      <Row>
+        <Status
+          value={newCardStatus}
+          selectedOptions={[newCardStatus]}
+          onChange={(event) => changeCardStatusHandler(event)}
+          onBlur={editCardHandler}
+        >
+          {
+            columns.map((col) => (<option key={col.id}>{col.name}</option>))
+          }
+        </Status>
+      </Row>
+    </CardContainer>
+  );
+};
 
 Card.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
+  id: PropTypes.string.isRequired,
+  editCard: PropTypes.func.isRequired,
+  deleteCard: PropTypes.func.isRequired,
 };
 
-export default Card;
+const mapStateToProps = (state) => ({ columns: state.columns, cards: state.cards });
+const mapDispatchToProps = (dispatch) => ({
+  editCard: (
+    id,
+    title,
+    description,
+    status,
+    query,
+  ) => dispatch(actionCreators.editCard(id, title, description, status, query)),
+  deleteCard: (id) => dispatch(actionCreators.deleteCard(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Card);

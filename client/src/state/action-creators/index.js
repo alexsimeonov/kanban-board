@@ -82,8 +82,14 @@ export const addCard = (title, description, status) => (dispatch) => {
     .catch((err) => console.log(err));
 };
 
-export const editCard = (id, title, description, status) => (dispatch) => {
-  axios.put(`http://localhost:3000/cards/${id}`, {
+export const editCard = (id, title, description, status, query) => (dispatch) => {
+  let url = `http://localhost:3000/cards/${id}`;
+
+  if (query) {
+    url += query;
+  }
+
+  axios.put(url, {
     title, description, status,
   })
     .then((res) => {

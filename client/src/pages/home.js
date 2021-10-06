@@ -1,16 +1,18 @@
-/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import Header from '../components/header';
 import Column from '../components/column';
 import { actionCreators } from '../state/index';
+import Modal from '../components/modal';
 
 const Home = styled.div`
   background-color: #F7F3E3;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
   height: calc(100vh - 70px);
 `;
@@ -56,9 +58,10 @@ const AddButton = styled.button`
 `;
 
 const HomePage = React.memo(({
-  columns, cards, getColumns, addColumn, getCards,
+  columns, getColumns, addColumn, getCards,
 }) => {
   const [columnNameInput, setColumnNameInput] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const cardStatusOptions = columns.map((col) => col.name);
 
   useEffect(() => {
@@ -82,30 +85,53 @@ const HomePage = React.memo(({
     addCardStatusOption(name);
   };
 
+  const showModalHandler = () => {
+    setShowModal(true);
+  };
+
+  const hideModalHandler = () => setShowModal(false);
+
+  if (!showModal) {
+    return (
+      <div>
+        <Header />
+        <Home>
+          <CreateColumnContainer>
+            <ColumnNameInput type="text" placeholder="Enter Column Name..." onChange={enterColumnNameInput} value={columnNameInput} />
+            <AddButton onClick={() => addNewColumnHandler(columnNameInput)}>
+              Add Column
+            </AddButton>
+            <AddButton onClick={showModalHandler}>
+              Add Card
+            </AddButton>
+          </CreateColumnContainer>
+          <ColumnsContainer>
+            {
+              // eslint-disable-next-line max-len
+              columns.map((column) => (<Column key={column.id} name={column.name} id={column.id} />))
+            }
+          </ColumnsContainer>
+        </Home>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Header />
       <Home>
-        <CreateColumnContainer>
-          <ColumnNameInput type="text" placeholder="Enter Column Name..." onChange={enterColumnNameInput} value={columnNameInput} />
-          <AddButton onClick={() => addNewColumnHandler(columnNameInput)}>
-            Add Column
-          </AddButton>
-          <AddButton>
-            Add Card
-          </AddButton>
-        </CreateColumnContainer>
-        <ColumnsContainer>
-          {
-            // eslint-disable-next-line react/prop-types
-            // eslint-disable-next-line max-len
-            columns.map((column) => (<Column key={column.id} name={column.name} id={column.id} cards={cards} />))
-          }
-        </ColumnsContainer>
+        <Modal show={showModal} hideModalHandler={hideModalHandler} />
       </Home>
     </div>
   );
 });
+
+HomePage.propTypes = {
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  getColumns: PropTypes.func.isRequired,
+  addColumn: PropTypes.func.isRequired,
+  getCards: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => ({ columns: state.columns, cards: state.cards });
 
@@ -119,13 +145,6 @@ const mapDispatchToProps = (dispatch) => ({
     description,
     status,
   ) => dispatch(actionCreators.addCard(title, description, status)),
-  editCard: (
-    id,
-    title,
-    description,
-    status,
-  ) => dispatch(actionCreators.editCard(id, title, description, status)),
-  deleteCard: (id) => dispatch(actionCreators.deleteCard(id)),
 }
 );
 

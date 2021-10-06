@@ -7,6 +7,8 @@ const reducer = (state = [], action) => {
       return action.payload;
     case ActionTypes.GET_CARD_BY_ID:
       return action.payload;
+    case ActionTypes.ADD_CARD:
+      return [...state, action.payload];
     case ActionTypes.EDIT_CARD:
       const newState = [...state];
       const cardToEdit = newState.find((card) => card.id === action.payload.id);
