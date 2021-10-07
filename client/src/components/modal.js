@@ -121,14 +121,6 @@ const Modal = ({
     }
   }, [columns]);
 
-  const onSubmit = () => {
-    addCard(titleValue, descriptionValue, statusValue);
-    hideModalHandler();
-    setTitleValue('');
-    setDescriptionValue('');
-    setStatusValue('');
-  };
-
   const changeCardTitleHandler = (event) => {
     setTitleValue(event.target.value);
   };
@@ -142,11 +134,16 @@ const Modal = ({
   };
 
   const closeModalHandler = () => {
-    hideModalHandler();
     setTitleValue('');
     setDescriptionValue('');
     setStatusValue('');
     clearErrors();
+    hideModalHandler();
+  };
+
+  const onSubmit = () => {
+    addCard(titleValue, descriptionValue, statusValue);
+    closeModalHandler();
   };
 
   return show ? (
