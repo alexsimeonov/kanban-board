@@ -125,7 +125,7 @@ const Card = ({
   };
 
   const changeCardStatusHandler = (action) => {
-    setNewCardStatus(action.target.selectedOptions[0].value);
+    setNewCardStatus(action.target.selectedOptions[0]?.value);
   };
 
   return (
