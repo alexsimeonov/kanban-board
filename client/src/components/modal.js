@@ -101,9 +101,9 @@ const ErrorSpan = styled.span`
 
 const Modal = ({
   columns,
+  show,
   addCard,
   hideModalHandler,
-  show,
 }) => {
   const [titleValue, setTitleValue] = useState('');
   const [descriptionValue, setDescriptionValue] = useState('');
@@ -198,9 +198,9 @@ const Modal = ({
 
 Modal.propTypes = {
   columns: PropsTypes.arrayOf(PropsTypes.object).isRequired,
+  show: PropsTypes.bool.isRequired,
   addCard: PropsTypes.func.isRequired,
   hideModalHandler: PropsTypes.func.isRequired,
-  show: PropsTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({ columns: state.columns });

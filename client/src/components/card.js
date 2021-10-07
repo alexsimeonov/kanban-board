@@ -34,11 +34,11 @@ border: none;
 `;
 
 const Description = styled.textarea`
-background-color: transparent;
 width: 88%;
 height: 40px;
 resize: none;
 margin-bottom: 10px;
+background-color: transparent;
 `;
 
 const Status = styled.select`
