@@ -136,7 +136,7 @@ const Modal = ({
   const closeModalHandler = () => {
     setTitleValue('');
     setDescriptionValue('');
-    setStatusValue('');
+    setStatusValue(columns[0].name);
     clearErrors();
     hideModalHandler();
   };

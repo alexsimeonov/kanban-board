@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Header from '../components/header';
 import Column from '../components/column';
@@ -141,6 +143,7 @@ const HomePage = React.memo(({
           }
         </ColumnsContainer>
         <Modal show={showModal} hideModalHandler={hideModalHandler} />
+        <ToastContainer />
       </Home>
     </div>
   );
