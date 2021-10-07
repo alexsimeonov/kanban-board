@@ -138,7 +138,7 @@ const Modal = ({
         </Row>
         <BottomRow>
           <Status
-            value={statusValue}
+            placeholder="Choose Card Status..."
             onChange={(event) => changeCardStatusHandler(event)}
             selectedOptions={[statusValue]}
           >

@@ -14,7 +14,7 @@ const Home = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: calc(100vh - 70px);
+  min-height: calc(100vh - 70px);
 `;
 
 const ColumnsContainer = styled.div`
