@@ -1,13 +1,15 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { MdUndo, MdDelete } from 'react-icons/md';
 import PropTypes from 'prop-types';
+import { useForm } from 'react-hook-form';
 import { actionCreators } from '../state/index';
 
 const CardContainer = styled.div`
 width: 97%;
-height: 170px;
+min-height: 200px;
 background-color: white;
 border: 1px solid #565254;
 border-radius: 5px;
@@ -72,7 +74,7 @@ border: none;
 
 const SaveChangesButton = styled.button`
   width: 50%;
-  height: 30px;
+  height: 40px;
   border: 1px solid #565254;
   border-radius: 5px;
   background-color: transparent;
@@ -80,6 +82,12 @@ const SaveChangesButton = styled.button`
   margin-top: 10px;
   margin-bottom: 10px;
   cursor: pointer;
+`;
+
+const CardForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Card = ({
@@ -95,6 +103,10 @@ const Card = ({
   const [newCardTitle, setNewCardTitle] = useState(title);
   const [newCardDescription, setNewCardDescription] = useState(description);
   const [newCardStatus, setNewCardStatus] = useState(status);
+  const {
+    register,
+    handleSubmit,
+  } = useForm();
 
   const deleteCardHandler = () => {
     deleteCard(id);
@@ -118,13 +130,36 @@ const Card = ({
 
   return (
     <CardContainer>
-      <Row>
-        <Title
-          type="text"
-          placeholder="Enter Card Title..."
-          value={newCardTitle}
-          onChange={(event) => setNewCardTitle(event.target.value)}
+      <CardForm onSubmit={handleSubmit(editCardHandler)}>
+        <Row>
+          <Title
+            type="text"
+            placeholder="Enter Card Title..."
+            value={newCardTitle}
+            {...register('title', { required: true, onChange: (event) => setNewCardTitle(event.target.value) })}
+          />
+        </Row>
+        <Description
+          value={newCardDescription}
+          placeholder="Enter Card Description..."
+          onChange={(event) => setNewCardDescription(event.target.value)}
         />
+        <Row>
+          <Status
+            value={newCardStatus}
+            selectedOptions={[newCardStatus]}
+            onChange={(event) => changeCardStatusHandler(event)}
+          >
+            {
+            columns.map((col) => (<option key={col.id}>{col.name}</option>))
+            }
+          </Status>
+        </Row>
+        <SaveChangesButton type="submit">
+          Save Changes
+        </SaveChangesButton>
+      </CardForm>
+      <Row>
         <ActionButton onClick={undoCardHandler}>
           <UndoIcon />
         </ActionButton>
@@ -132,25 +167,6 @@ const Card = ({
           <DeleteIcon />
         </ActionButton>
       </Row>
-      <Description
-        value={newCardDescription}
-        placeholder="Enter Card Description..."
-        onChange={(event) => setNewCardDescription(event.target.value)}
-      />
-      <Row>
-        <Status
-          value={newCardStatus}
-          selectedOptions={[newCardStatus]}
-          onChange={(event) => changeCardStatusHandler(event)}
-        >
-          {
-            columns.map((col) => (<option key={col.id}>{col.name}</option>))
-          }
-        </Status>
-      </Row>
-      <SaveChangesButton onClick={editCardHandler}>
-        Save Changes
-      </SaveChangesButton>
     </CardContainer>
   );
 };
