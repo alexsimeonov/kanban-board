@@ -28,13 +28,13 @@ align-items: center;
 
 const Title = styled.input`
 background-color: transparent;
-width: 80%;
+width: 90%;
 height: 15px;
 border: none;
 `;
 
 const Description = styled.textarea`
-width: 88%;
+width: 90%;
 height: 40px;
 resize: none;
 margin-bottom: 10px;
