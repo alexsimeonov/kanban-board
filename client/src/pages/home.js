@@ -43,7 +43,7 @@ const ColumnNameInput = styled.input`
   width: 200px;
   height: 30px;
   margin-right: 15px;
-  margin-left: 35px;
+  margin-left: 45px;
   background-color: transparent;
   border: 1px solid #565254;
   border-radius: 5px;
