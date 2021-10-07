@@ -1,7 +1,11 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { useForm } from 'react-hook-form';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Header from '../components/header';
 import Column from '../components/column';
@@ -39,7 +43,7 @@ const ColumnNameInput = styled.input`
   width: 200px;
   height: 30px;
   margin-right: 15px;
-  margin-left: 35px;
+  margin-left: 45px;
   background-color: transparent;
   border: 1px solid #565254;
   border-radius: 5px;
@@ -61,19 +65,30 @@ const AddButton = styled.button`
   margin-left: 10px;
 `;
 
+const ErrorSpan = styled.span`
+  color: red;
+  font-size: 15px;
+`;
+
 const HomePage = React.memo(({
   columns, getColumns, addColumn, getCards,
 }) => {
   const [columnNameInput, setColumnNameInput] = useState('');
   const [showModal, setShowModal] = useState(false);
   const cardStatusOptions = columns.map((col) => col.name);
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
     getColumns();
     getCards();
   }, []);
 
-  const enterColumnNameInput = (event) => {
+  const columnNameInputChangedHandler = (event) => {
     setColumnNameInput(event.target.value);
   };
 
@@ -83,31 +98,44 @@ const HomePage = React.memo(({
     }
   };
 
-  const addNewColumnHandler = (name) => {
-    addColumn(name);
-    setColumnNameInput('');
-    addCardStatusOption(name);
-  };
-
   const showModalHandler = () => {
     setShowModal(true);
   };
 
   const hideModalHandler = () => setShowModal(false);
 
+  const createColumn = () => {
+    addColumn(columnNameInput);
+    addCardStatusOption(columnNameInput);
+    setColumnNameInput('');
+  };
+
   return (
     <div>
       <Header />
       <Home>
         <CreateColumnContainer>
-          <ColumnNameInput type="text" placeholder="Enter Column Name..." onChange={enterColumnNameInput} value={columnNameInput} />
-          <AddButton onClick={() => addNewColumnHandler(columnNameInput)}>
-            Add Column
-          </AddButton>
+          <form onSubmit={handleSubmit(createColumn)}>
+            <ColumnNameInput
+              placeholder="Enter Card Title..."
+              value={columnNameInput}
+              {...register('name', {
+                required: true,
+                onChange: (event) => columnNameInputChangedHandler(event),
+                onBlur: () => clearErrors(),
+              })}
+            />
+            <AddButton
+              type="submit"
+            >
+              Add Column
+            </AddButton>
+          </form>
           <AddButton onClick={showModalHandler}>
             Add Card
           </AddButton>
         </CreateColumnContainer>
+        { errors.name?.type === 'required' && <ErrorSpan>Column name is required.</ErrorSpan> }
         <ColumnsContainer>
           {
             columns
@@ -115,6 +143,7 @@ const HomePage = React.memo(({
           }
         </ColumnsContainer>
         <Modal show={showModal} hideModalHandler={hideModalHandler} />
+        <ToastContainer />
       </Home>
     </div>
   );

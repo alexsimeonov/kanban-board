@@ -57,7 +57,7 @@ const CardsContainer = styled.div`
 `;
 
 const Column = ({
-  name, id, editColumn, deleteColumn, cards, filterValue,
+  name, id, cards, filterValue, editColumn, deleteColumn,
 }) => {
   const [newColumnName, setNewColumnName] = useState(name);
 
@@ -89,7 +89,12 @@ const Column = ({
   return (
     <Container>
       <ColumnHeaderContainer>
-        <Title type="text" value={newColumnName} onChange={(event) => changeNameHandler(event.target.value)} onBlur={editColumnHandler} />
+        <Title
+          type="text"
+          value={newColumnName}
+          onChange={(event) => changeNameHandler(event.target.value)}
+          onBlur={editColumnHandler}
+        />
         <DeleteButton onClick={deleteColumnHandler}>
           <DeleteIcon />
         </DeleteButton>
@@ -115,10 +120,10 @@ const Column = ({
 Column.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  editColumn: PropTypes.func.isRequired,
-  deleteColumn: PropTypes.func.isRequired,
   cards: PropTypes.arrayOf(PropTypes.object).isRequired,
   filterValue: PropTypes.string.isRequired,
+  editColumn: PropTypes.func.isRequired,
+  deleteColumn: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

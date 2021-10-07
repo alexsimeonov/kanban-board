@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import ActionTypes from './action-types';
 
 export const getColumns = () => (dispatch) => {
@@ -9,7 +10,12 @@ export const getColumns = () => (dispatch) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      toast(err.message, {
+        theme: 'colored',
+        type: 'error',
+      });
+    });
 };
 
 export const addColumn = (name) => (dispatch) => {
@@ -20,7 +26,12 @@ export const addColumn = (name) => (dispatch) => {
       type: ActionTypes.ADD_COLUMN,
       payload: res.data,
     });
-  }).catch((err) => console.log(err));
+  }).catch((err) => {
+    toast(err.message, {
+      theme: 'colored',
+      type: 'error',
+    });
+  });
 };
 
 export const editColumn = (id, name) => (dispatch) => {
@@ -33,7 +44,12 @@ export const editColumn = (id, name) => (dispatch) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      toast(err.message, {
+        theme: 'colored',
+        type: 'error',
+      });
+    });
 };
 
 export const deleteColumn = (id) => (dispatch) => {
@@ -44,7 +60,12 @@ export const deleteColumn = (id) => (dispatch) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      toast(err.message, {
+        theme: 'colored',
+        type: 'error',
+      });
+    });
 };
 
 export const getCards = () => (dispatch) => {
@@ -55,7 +76,12 @@ export const getCards = () => (dispatch) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      toast(err.message, {
+        theme: 'colored',
+        type: 'error',
+      });
+    });
 };
 
 export const getCardById = (id) => (dispatch) => {
@@ -66,7 +92,12 @@ export const getCardById = (id) => (dispatch) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      toast(err.message, {
+        theme: 'colored',
+        type: 'error',
+      });
+    });
 };
 
 export const addCard = (title, description, status) => (dispatch) => {
@@ -79,7 +110,12 @@ export const addCard = (title, description, status) => (dispatch) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      toast(err.message, {
+        theme: 'colored',
+        type: 'error',
+      });
+    });
 };
 
 export const editCard = (id, title, description, status, query) => (dispatch) => {
@@ -98,7 +134,12 @@ export const editCard = (id, title, description, status, query) => (dispatch) =>
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      toast(err.message, {
+        theme: 'colored',
+        type: 'error',
+      });
+    });
 };
 
 export const deleteCard = (id) => (dispatch) => {
@@ -109,7 +150,12 @@ export const deleteCard = (id) => (dispatch) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      toast(err.message, {
+        theme: 'colored',
+        type: 'error',
+      });
+    });
 };
 
 export const filterCards = (value) => (dispatch) => dispatch({

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { MdClose } from 'react-icons/md';
 import PropsTypes from 'prop-types';
+import { useForm } from 'react-hook-form';
 import { actionCreators } from '../state/index';
 
 const ModalContainer = styled.div`
@@ -20,7 +22,7 @@ const ModalContainer = styled.div`
 
 const ModalBody = styled.div`
   width: 500px;
-  height: 270px;
+  min-height: 320px;
   border: 1px solid #565254;
   border-radius: 5px;
   background-color: #BFC3BA;
@@ -92,22 +94,39 @@ const BottomRow = styled(Row)`
   justify-content: center;
 `;
 
+const ErrorSpan = styled.span`
+  color: red;
+  font-size: 15px;
+`;
+
 const Modal = ({
   columns,
+  show,
   addCard,
   hideModalHandler,
-  show,
 }) => {
   const [titleValue, setTitleValue] = useState('');
   const [descriptionValue, setDescriptionValue] = useState('');
   const [statusValue, setStatusValue] = useState('');
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    formState: { errors },
+  } = useForm();
 
-  const addCardHandler = () => {
-    addCard(titleValue, descriptionValue, statusValue);
-    hideModalHandler();
-    setTitleValue('');
-    setDescriptionValue('');
-    setStatusValue('');
+  useEffect(() => {
+    if (columns.length) {
+      setStatusValue(columns[0].name);
+    }
+  }, [columns]);
+
+  const changeCardTitleHandler = (event) => {
+    setTitleValue(event.target.value);
+  };
+
+  const changeCardDescriptionHandler = (event) => {
+    setDescriptionValue(event.target.value);
   };
 
   const changeCardStatusHandler = (event) => {
@@ -115,43 +134,63 @@ const Modal = ({
   };
 
   const closeModalHandler = () => {
-    hideModalHandler();
     setTitleValue('');
     setDescriptionValue('');
-    setStatusValue('');
+    setStatusValue(columns[0].name);
+    clearErrors();
+    hideModalHandler();
+  };
+
+  const onSubmit = () => {
+    addCard(titleValue, descriptionValue, statusValue);
+    closeModalHandler();
   };
 
   return show ? (
     <ModalContainer>
       <ModalBody>
-        <Row>
-          <ModalTitle>Create Card</ModalTitle>
-          <CloseButton onClick={closeModalHandler}>
-            <CloseIcon />
-          </CloseButton>
-        </Row>
-        <Row>
-          <Title placeholder="Enter Card Title..." value={titleValue} onChange={(event) => setTitleValue(event.target.value)} />
-        </Row>
-        <Row>
-          <Description placeholder="Enter Card Description..." value={descriptionValue} onChange={(event) => setDescriptionValue(event.target.value)} />
-        </Row>
-        <BottomRow>
-          <Status
-            placeholder="Choose Card Status..."
-            onChange={(event) => changeCardStatusHandler(event)}
-            selectedOptions={[statusValue]}
-          >
-            {
-              columns.map((col) => (<option key={col.id}>{col.name}</option>))
-            }
-          </Status>
-        </BottomRow>
-        <BottomRow>
-          <CreateButton onClick={addCardHandler}>
-            Create Card
-          </CreateButton>
-        </BottomRow>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Row>
+            <ModalTitle>Create Card</ModalTitle>
+            <CloseButton onClick={closeModalHandler}>
+              <CloseIcon />
+            </CloseButton>
+          </Row>
+          <Row>
+            <Title
+              placeholder="Enter Card Title..."
+              {...register('title', { required: true, value: titleValue, onChange: (event) => changeCardTitleHandler(event) })}
+            />
+          </Row>
+          <Row>
+            { errors.title?.type === 'required' && <ErrorSpan>Card title is required.</ErrorSpan> }
+          </Row>
+          <Row>
+            <Description
+              placeholder="Enter Card Description..."
+              {...register('description', { required: true, value: descriptionValue, onChange: (event) => changeCardDescriptionHandler(event) })}
+            />
+          </Row>
+          <Row>
+            { errors.description?.type === 'required' && <ErrorSpan>Card description is required.</ErrorSpan> }
+          </Row>
+          <BottomRow>
+            <Status
+              placeholder="Choose Card Status..."
+              {...register('status', { required: true, onChange: (event) => changeCardStatusHandler(event) })}
+            >
+              {
+                columns.map((col) => (<option key={col.id}>{col.name}</option>))
+              }
+            </Status>
+            { errors.status?.type === 'required' && <ErrorSpan>Card status is required.</ErrorSpan> }
+          </BottomRow>
+          <BottomRow>
+            <CreateButton type="submit">
+              Create Card
+            </CreateButton>
+          </BottomRow>
+        </form>
       </ModalBody>
     </ModalContainer>
   ) : null;
@@ -159,9 +198,9 @@ const Modal = ({
 
 Modal.propTypes = {
   columns: PropsTypes.arrayOf(PropsTypes.object).isRequired,
+  show: PropsTypes.bool.isRequired,
   addCard: PropsTypes.func.isRequired,
   hideModalHandler: PropsTypes.func.isRequired,
-  show: PropsTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({ columns: state.columns });
