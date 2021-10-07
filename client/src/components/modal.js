@@ -117,7 +117,7 @@ const Modal = ({
 
   useEffect(() => {
     if (columns.length) {
-      setStatusValue(columns[0].name);
+      setStatusValue(columns[0]?.name);
     }
   }, [columns]);
 
@@ -130,13 +130,13 @@ const Modal = ({
   };
 
   const changeCardStatusHandler = (event) => {
-    setStatusValue(event.target.selectedOptions[0].value);
+    setStatusValue(event.target.selectedOptions[0]?.value);
   };
 
   const closeModalHandler = () => {
     setTitleValue('');
     setDescriptionValue('');
-    setStatusValue(columns[0].name);
+    setStatusValue(columns[0]?.name);
     clearErrors();
     hideModalHandler();
   };
