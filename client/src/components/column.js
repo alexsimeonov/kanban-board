@@ -4,6 +4,7 @@ import { MdDelete } from 'react-icons/md';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { actionCreators } from '../state/index';
+import Card from './card';
 
 const Container = styled.div`
   display: flex;
@@ -12,13 +13,14 @@ const Container = styled.div`
   align-items: center;
   min-width: 300px;
   height: 700px;
-  margin: 20px;
-  background-color: transparent;
-  border: 1px solid #0EB1D2;
+  margin-right: 20px;
+  background-color: #D0CFCF;
+  border: 1px solid #565254;
+  border-radius: 5px;
 `;
 
 const Title = styled.input`
-  color: #0EB1D2;
+  color: #565254;
   background-color: transparent;
   border: none;
   align-self: flex-start;
@@ -31,7 +33,7 @@ const DeleteButton = styled.button`
 `;
 
 const DeleteIcon = styled(MdDelete)`
-  color: #0EB1D2;
+  color: #565254;
   width: 20px;
   height: 20px;
 `;
@@ -45,18 +47,24 @@ const ColumnHeaderContainer = styled.div`
 const CardsContainer = styled.div`
   width: 90%;
   height: 90%;
-  background-color: #0EB1D2;
+  background-color: transparent;
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-y: scroll;
 `;
 
 const Column = ({
-  // eslint-disable-next-line react/prop-types
-  name, id, editColumn, deleteColumn,
+  name, id, editColumn, deleteColumn, cards, filterValue,
 }) => {
   const [newColumnName, setNewColumnName] = useState(name);
 
   const changeNameHandler = (value) => {
-    setNewColumnName(value);
+    if (value !== newColumnName) {
+      setNewColumnName(value);
+    }
   };
 
   const editColumnHandler = () => {
@@ -67,6 +75,17 @@ const Column = ({
     deleteColumn(id);
   };
 
+  const filterCards = (cardsArr) => {
+    let filteredCardsByTitle = cardsArr;
+
+    if (filterValue) {
+      filteredCardsByTitle = cardsArr.filter((card) => card.title
+        .toLowerCase().includes(filterValue.toLowerCase()));
+    }
+
+    return filteredCardsByTitle.filter((card) => card.status === name);
+  };
+
   return (
     <Container>
       <ColumnHeaderContainer>
@@ -75,7 +94,20 @@ const Column = ({
           <DeleteIcon />
         </DeleteButton>
       </ColumnHeaderContainer>
-      <CardsContainer />
+      <CardsContainer>
+        {
+          filterCards(cards)
+            .map((card) => (
+              <Card
+                title={card.title}
+                description={card.description}
+                status={card.status}
+                key={card.id}
+                id={card.id}
+              />
+            ))
+        }
+      </CardsContainer>
     </Container>
   );
 };
@@ -83,9 +115,16 @@ const Column = ({
 Column.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
+  editColumn: PropTypes.func.isRequired,
+  deleteColumn: PropTypes.func.isRequired,
+  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
+  filterValue: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state) => ({
+  cards: state.cardsData.cards,
+  filterValue: state.cardsData.filterValue,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   editColumn: (id, name) => dispatch(actionCreators.editColumn(id, name)),
